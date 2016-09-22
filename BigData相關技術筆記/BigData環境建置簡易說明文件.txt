@@ -1,0 +1,357 @@
+﻿BigData Platform Build Description Document
+--------------------------------------------
+~/.bashrc設定內容如下:(Hadoop-master)
+-------------------
+export JAVA_HOME=/bgdt/java/jdk1.8.0_73
+export HADOOP_HOME=/bgdt/hadoop-2.7.1
+export SPARK_HOME=/bgdt/spark-1.6.0
+export HADOOP_CONF_DIR=/bgdt/hadoop-2.7.1/etc/hadoop
+export DERBY_HOME=/bgdt/derby-10.12.1.1
+export HIVE_HOME=/bgdt/hive-1.2.1
+export HBASE_HOME=/bgdt/hbase-1.1.4
+export PHOENIX_HOME=/bgdt/phoenix-4.7.0
+
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/lib/*:.
+export CLASSPATH=$CLASSPATH:$HIVE_HOME/lib/*:.
+export CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar
+export CLASSPATH=$CLASSPATH:$PHOENIX_HOME/phoenix-4.7.0-HBase-1.1-client.jar
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/share/hadoop/common/*:.
+
+export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$DERBY_HOME/bin:$HIVE_HOME/bin:$HBASE_HOME/bin:$PATH
+
+##以上設定完成後執行[CMD]source ~/.bashrc,設定內容立即生效
+-----------------------
+~/.bashrc設定內容如下:(Hadoop-slave1,slave2)
+-----------------------------
+export JAVA_HOME=/bgdt/java/jdk1.8.0_73
+export HADOOP_HOME=/bgdt/hadoop-2.7.1
+export HADOOP_CONF_DIR=/bgdt/hadoop-2.7.1/etc/hadoop
+export CLASSPATH=$CLASSPATH:$HADOOP_HOME/share/hadoop/common/*:.
+
+export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
+
+##以上設定完成後執行[CMD]source ~/.bashrc,設定內容立即生效
+
+------------------------------------------
+
+一.基本環境建置
+-------------------
+1.install Oracle Linux OS
+2.create hadoop user
+	[CMD]pass=$(perl -e 'print crypt($ARGV[0], "password")' "hadoop");
+	[CMD]adduser -m -p $pass hadoop;
+	[CMD]echo "hadoop    ALL=(ALL) ALL" >> /etc/sudoers;
+	[CMD]echo "service iptables stop" >> /etc/rc.local;
+3.setting /etc/hosts
+	[CMD]echo "192.168.11.90 hadoop-master" >> /etc/hosts;
+	[CMD]echo "192.168.11.91 hadoop-slave1" >> /etc/hosts;
+	[CMD]echo "192.168.11.92 hadoop-slave2" >> /etc/hosts;
+	[CMD]echo "192.168.11.93 hadoop-slave3" >> /etc/hosts;
+4.setting ifcfg-eth
+    	[CMD]echo "DEVICE=eth0" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "BOOTPROTO=none" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "NM_CONTROLLED=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "ONBOOT=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "TYPE=Ethernet" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "USERCTL=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "IPv6INIT=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "PEERDNS=yes" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "IPADDR=192.168.11.90" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "NETMASK=255.255.255.0" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+	[CMD]echo "GATEWAY=192.168.11.254" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+ 	[CMD]service network restart
+5 restart Linux OS
+	[CMD]init 6
+
+二. JDK8&ssh Install
+---------------------------------------------------------------
+0. create install Directory
+    6.1 [CMD]mkdir -p /bgdt/install_src
+    6.2 [CMD]mkdir -p /bgdt/java
+
+1. ssh setting
+    1.1 [CMD]ssh-keygen
+    1.2 [CMD]ssh-copy-id hadoop@hadoop-master
+    1.3 [CMD]ssh-copy-id hadoop@hadoop-slave1
+    1.4 [CMD]ssh-copy-id hadoop@hadoop-slave2
+    1.5 testing ssh
+	1.5.1 [CMD]ssh hadoop@hadoop-master
+	1.5.2 [CMD]ssh hadoop@hadoop-slave1
+	1.5.3 [CMD]ssh hadoop@hadoop-slave2
+2. install JDK8(every host)
+    2.1 download jdk-8u73-linux-x64.tar.gz,upload to hadoop-master/hadoop-slave1/hadoop-slave2
+	2.1.1 [CMD] cp /bgdt/install_src/jdk-8u73-linux-x64.tar.gz /bgdt/install_src
+        2.1.2 [CMD]scp /bgdt/install_src/jdk-8u73-linux-x64.tar.gz hadoop-slave1:/bgdt/install_src
+	2.1.3 [CMD]scp /bgdt/install_src/jdk-8u73-linux-x64.tar.gz hadoop-slave2:/bgdt/install_src
+    2.2 tar -zxvf
+	2.2.1 [CMD]tar -zxvf /bgdt/install_src/jdk-8u73-linux-x64.tar.gz -C /bgdt/java
+	2.2.2 [CMD]ssh hadoop-slave1 'tar -zxvf /bgdt/install_src/jdk-8u73-linux-x64.tar.gz -C /bgdt/java'
+	2.2.3 [CMD]ssh hadoop-slave2 'tar -zxvf /bgdt/install_src/jdk-8u73-linux-x64.tar.gz -C /bgdt/java'
+    2.3 Modify ~/.bashrc
+    2.4 java -version
+	2.4.1 [CMD]ssh hadoop-master 'java -version'
+	2.4.2 [CMD]ssh hadoop-slave1 'java -version'
+	2.4.3 [CMD]ssh hadoop-slave2 'java -version'
+3. synchronization system time(Important)   
+    3.1 [CMD]ssh hadoop-master 'date -s 12:54:00;hwclock -w'
+    3.2 [CMD]ssh hadoop-slave1 'date -s 12:54:00;hwclock -w'
+    3.3 [CMD]ssh hadoop-slave2 'date -s 12:54:00;hwclock -w'
+
+三.hadoop+yarn-cluster(hadoop-2.7.1.tar.gz) environment install
+--------------------------------------------------------------
+1. download hadoop-2.7.1.tar.gz,upload hadoop-master
+2. [CMD]tar -zxvf /bgdt/install_src/hadoop-2.7.1.tar.gz -C /bgdt
+3. Modify ~/.bashrc
+4. Modify hadoop Config file
+    4.1 /bgdt/hadoop-2.7.1/etc/hadoop/slaves
+    4.2 /bgdt/hadoop-2.7.1/etc/hadoop/core-site.xml
+    4.3 /bgdt/hadoop-2.7.1/etc/hadoop/hdfs-site.xml
+    4.4 /bgdt/hadoop-2.7.1/etc/hadoop/mapred-site.xml
+    4.5 /bgdt/hadoop-2.7.1/etc/hadoop/yarn-site.xml
+5. [CMD]tar -zcf /bgdt/hadoop.master.tar.gz /bgdt/hadoop-2.7.1
+6. copy hadoop-master.tar.gz to slave1,slave2
+    6.1 [CMD]scp /bgdt/hadoop.master.tar.gz hadoop-slave1:/bgdt/install_src
+    6.2 [CMD]scp /bgdt/hadoop.master.tar.gz hadoop-slave2:/bgdt/install_src	
+7. install hadoop to every datanode host
+    7.1 [CMD]tar -zxvf /bgdt/install_src/hadoop.master.tar.gz -C /bgdt
+8. [CMD]hadoop namenode -format
+9. [CMD]start-dfs.sh   <--啟動後進入WebUI觀察DataNode是否有啟動及相關資訊(http://hadoop-master:50070)
+10.[CMD]start-yarn.sh  <--啟動後進入WebUI觀察DataNode是否有啟動及相關資訊(http://hadoop-master:8088)
+11.[CMD]hadoop dfsadmin -report <--此指令可以查看DataNode容量資訊
+-------------------------------------------------------------------------------------------------
+[add a new datanode]
+
+
+
+四.Spark environment install
+--------------------------------------------------------------
+1. download spark-1.6.0-bin-hadoop2.6.tgz ,upload hadoop-master
+2. tar -zxvf spark-1.6.0-bin-hadoop2.6.tgz -C /bgdt
+3. mv /bgdt/spark-1.6.0-bin-hadoop2.6 /bgdt/spark-1.6.0(Directory Name is too long,so rename name)
+4. Modify ~/.bashrc
+5. spark-shell(進入spark-shell,操作須使用scala語法)
+
+五.PhaseI Testing: WordCounter(hadoop+yarn-cluster+spark)
+----------------------------------------------------------------
+1. test.txt,WordCounter.jar uploading to hadoop-master /opt/job Directory 
+2. [CMD]hadoop fs -put /opt/job/test.txt /tmp
+3. use spark-submit
+   3.1 spark-submit test:(WordCounter.jar)
+     spark-submit \
+     --master yarn-cluster \
+     --class "WordCounter" \
+     /opt/job/WordCounter.jar
+   3.2. http://hadoop-master:8088  <--觀察Spark程式執行情形
+4. use spark-shell
+   4.1 [CMD]spark-shell
+   4.2 write scala program
+
+六.Derby Install
+-------------------------------------------------------------------
+1. download db-derby-10.12.1.1-bin.tar.gz,and upload to hadoop-master
+2. [CMD]tar -zxvf /bgdt/install_src/db-derby-10.12.1.1-bin.tar.gz -C /bgdt
+3. [CMD]mv /bgdt/db-derby-10.12.1.1-bin /bgdt/derby-10.12.1.1
+4. Modify ~/.bashrc
+5. [CMD]mkdir -p /bgdt/derby-10.12.1.1/data
+
+七.Hive install
+--------------------------------------------------------------------
+1. download apache-hive-1.2.1-bin.tar.gz,and upload to hadoop-master
+2. [CMD]tar -zxvf /bgdt/install_src/apache-hive-1.2.1-bin.tar.gz -C /bgdt
+3. [CMD]mv /bgdt/apache-hive-1.2.1-bin /bgdt/hive-1.2.1
+4. Modify ~/.bashrc
+5. Modify hive Config file
+    5.1 $HIVE_HOME/conf/hive-env.sh
+    5.2 $HIVE_HOME/conf/hive-site.xml
+    5.3 $HIVE_HOME/conf/jpox.properties
+    5.4 $JAVA_HOME/jre/lib/security/java.policy
+6. copy file derby.jar,derbyclient.jar from $DERBY_HOME/lib to $HIVE_HOME/lib
+7. rm -rf $HIVE_HOME/lib/derby-10.10.2.0.jar,or cp to another Directory
+8. Established hive using the directory in HDFS system
+   8.1 hadoop fs -mkdir -p /tmp
+   8.2 hadoop fs -mkdir -p /user/hive/warehouse
+9. nohup startNetworkServer -h hadoop-master -noSecurityManager & <-- start derby
+10.nohup hive --service metastore &                               <-- start hive metastore
+11.jps
+   NetworkServerControl  <-- derby process
+12.cp $HIVE_HOME/conf/hive-site.xml $SPARK_HOME/conf
+
+八.PhaseII Testing:Spark call hive to get table data(hadoop+spark+hive)
+----------------------------------------------------------------------
+1. Hive create table and insert data
+   1.1 CREATE TABLE students (name VARCHAR(64), age INT, gpa DECIMAL(3, 2)) CLUSTERED BY (age) INTO 2 BUCKETS STORED AS ORC;
+   1.2 INSERT INTO TABLE students VALUES ('fred flintstone', 35, 1.28), ('barney rubble', 32, 2.32);
+2. start spark-shell
+3. scala>
+   val hivecontext = new org.apache.spark.sql.hive.HiveContext(sc);
+   val ds = hivecontext.sql("select * from students");
+   df.show();
+4.testing 2:MSGSearh
+
+九. HBase 1.1.4 install
+----------------------------------------------------------------------
+1. download hbase-1.1.4-bin.tar.gz, upload to hadoop-master
+2. [CMD]tar -zxvf /bgdt/install_src/hbase-1.1.4-bin.tar.gz -C /bgdt
+3. Modify ~/.bashrc
+4. Modify hbase Config file
+   4.1 $HBASE_HOME/conf/regionservers
+   4.2 $HBASE_HOME/conf/hbase-env.sh
+   4.3 $HBASE_HOME/conf/hbase-site.xml
+5. [CMD]tar -zcf ~/hbase.master.tar.gz /bgdt/hbase-1.1.4/
+6. [CMD]scp ~/hbase.master.tar.gz hadoop-slave1:/bgdt/install_src
+   [CMD]scp ~/hbase.master.tar.gz hadoop-slave2:/bgdt/install_src
+7. [CMD]ssh hadoop-slave1 'tar -zxvf /bgdt/install_src/hbase.master.tar.gz -C /bgdt'
+   [CMD]ssh hadoop-slave2 'tar -zxvf /bgdt/install_src/hbase.master.tar.gz -C /bgdt'
+8. cp hbase-protocol-1.1.4.jar
+   8.1  cp $HBASE_HOME/lib/hbase-protocol-1.1.4.jar $HADOOP_HOME/share/hadoop/common
+   8.2 scp $HBASE_HOME/lib/hbase-protocol-1.1.4.jar hadoop-slave1:$HADOOP_HOME/share/hadoop/common
+   8.3 scp $HBASE_HOME/lib/hbase-protocol-1.1.4.jar hadoop-slave2:$HADOOP_HOME/share/hadoop/common
+9. [CMD]start-hbase.sh  <-- start hbase
+10.[CMD]jps
+   HMaster      <--- hbase master process
+   HQuorumPeer  <--- zookeeper process
+11.[CMD]ssh hadoop-slave1 'jps'
+   HRegionServer <--- hbase region server process
+   HQuorumPeer   <--- zookeeper process
+12.[CMD]ssh hadoop-slave2 'jps'
+   HRegionServer <--- hbase region server process
+   HQuorumPeer   <--- zookeeper process 
+13.http://hadoop-master:16010
+14.stop HRegionServer & HMaster process
+   14.1 [CMD]$HBASE_HOME/bin/hbase-daemons.sh stop regionserver
+   14.2 [CMD]$HBASE_HOME/bin/hbase-daemon.sh stop master
+15.[CMD]$HBASE_HOME/bin/hbase clean --cleanZk
+16.[CMD]$HBASE_HOME/bin/stop-hbase.sh
+17.[CMD]$HBASE_HOME/bin/start-hbase.sh
+
+十.Phoenix install
+-------------------------------------------------------------------
+1. download phoenix-4.7.0-HBase-1.1-bin.tar.gz,and upload to hadoop-master
+2. [CMD]tar -zxvf /bgdt/install_src/phoenix-4.7.0-HBase-1.1-bin.tar.gz -C /bgdt
+3. [CMD]mv /bgdt/phoenix-4.7.0-HBase-1.1-bin /bgdt/phoenix-4.7.0
+4. copy phoenix-4.7.0-HBase-1.1-server.jar,phoenix-core-4.7.0-HBase-1.1.jar
+   4.1  cp phoenix-4.7.0-HBase-1.1-server.jar phoenix-core-4.7.0-HBase-1.1.jar $HBASE_HOME/lib
+   4.2 scp phoenix-4.7.0-HBase-1.1-server.jar phoenix-core-4.7.0-HBase-1.1.jar hadoop-slave1:$HBASE_HOME/lib
+   4.3 scp phoenix-4.7.0-HBase-1.1-server.jar phoenix-core-4.7.0-HBase-1.1.jar hadoop-slave2:$HBASE_HOME/lib
+5. cd $PHOENIX_HOME/bin
+6. ln -sf $HBASE_HOME/conf/hbase-site.xml  hbase-site.xml
+7. connect phoenix
+   7.1 $PHOENIX_HOME/bin/sqlline.py localhost
+   7.2 $PHOENIX_HOME/bin/sqlline.py hadoop-slave1:2181
+   7.3 $PHOENIX_HOME/bin/sqlline.py hadoop-slave2:2181
+
+十一.PhaseIII Test:(hadoop+yarn-cluster+spark+phoenix)
+---------------------------------------------------------------------
+MSGSearchTest
+
+十二.oozie install
+---------------------------------------------------------------------
+1.  compiler oozie & oozie build to oozie-4.2.0-distro.tar.gz
+2.  upload oozie-4.2.0-distro.tar.gz to hadoop-master /bgdt/install_src
+3.  [CMD]mvn clean package assembly:single -DskipTests -Dhadoop.vaersion=2.7.1 -Dspark.version=2.0.0
+3.  putty to hadoop-master
+4.  tar -zxvf oozie-4.2.0-distro.tar.gz -C /bgdt
+5.  cd /bgdt/oozie-4.2.0
+6.  mkdir libext
+7.  cp /bgdt/hadoop-2.7.1/share/hadoop/*/*.jar /bgdt/oozie-4.2.0/libext/
+    cp /bgdt/hadoop-2.7.1/share/hadoop/*/lib/*.jar /bgdt/oozie-4.2.0/libext/
+8.  rm -rf /bgdt/oozie-4.2.0/libext/jsp-api-2.1.jar
+9.  download ext-2.2.zip & upload hadoop-master ,cp to /bgdt/oozie-4.2.0/libext(http://dev.sencha.com/deploy/ext-2.2.zip)
+10. Modify $HADOOP_HOME/etc/hadoop/core-site.xml
+    hadoop.proxyuser.oozie.hosts(value=*)
+    hadoop.proxyuser.oozie.groups(value=*)
+12. cd /bgdt/oozie-4.2.0/bin
+13. ./oozie-setup.sh prepare-war
+14. ./oozie-setup.sh db create -run
+15. restart all hadoop service
+16. ./oozied.sh start
+17. ./oozie admin -oozie http://localhost:11000/oozie -status
+18. oozie WebUI http://hadoop-master:11000/oozie
+19. tar -zxvf oozie-sharelib-4.2.0.tar.gz
+20. Modify oozie-site.xml
+    - oozie.service.WorkflowAppService.system.libpath(/user/hadoop/share/lib)
+    - oozie.service.HadoopAccessorService.hadoop.configurations(*=/bgdt/hadoop-2.7.1/etc/hadoop)
+    - oozie.use.system.libpath(true)
+21. create HDFS Directory for oozie
+    - hadoop fs -mkdir -p /user/hadoop/share/lib
+22. put file to HDFS
+    - hadoop fs -put /bgdt/oozie-4.2.0/share/lib/* /user/hadoop/share/lib  
+PS:
+1.修改任何設定檔或變更class檔時,都需要重啟oozie 
+2.如果Run yarn-cluster模式時狀態會一直產生 ACCEPTED時,須修改已下檔案
+--------------
+$HADOOP_CONF/capacity-scheduler.xml
+修改以下參數:
+  yarn.scheduler.capacity.maximum-am-resource-percent  (value:0.1 -> 0.5)
+
+
+十三.Testing OOZIE
+--------------------------
+一. create simple workflow job
+1. hadoop fs -mkdir -p /user/hadoop/workflow/spark-wordcounter/lib (create hdfs directory)
+2. create WordCounter.jar & upload to Linux /opt/job/workflow/spark-wordcounter/lib
+3. create workflow.xml & upload to Linux /opt/job/workflow/spark-wordcounter
+4. create job.properties & upload to Linux /opt/job/workflow/spark-wordcounter
+5. hadoop fs -put -p /opt/job/workflow/spark-wordcounter/* /user/hadoop/workflow/spark-wordcounter
+6. /bgdt/oozie-4.2.0/bin/oozie job -oozie http://localhost:11000/oozie -config /opt/job/workflow/spark-wordcounter/job.properties -run
+7. WebUI: http://hadoop-master:11000/oozie  -->Workflow Jobs tab
+8. /bgdt/oozie-4.2.0/bin/oozie job -oozie http://localhost:11000/oozie -kill [0000132-160616162745939-oozie-hado-C]
+
+二. create simple oozie coordinator Job
+1. hadoop fs -mkdir -p /user/hadoop/timer/lib (create hdfs directory)
+2. create coordinator.xml & upload to Linux /opt/job/timer
+3. create job.properties & upload to Linux /opt/job/timer
+4. hadoop fs -put -p /opt/job/timer/* /user/hadoop/timer
+5. /bgdt/oozie-4.2.0/bin/oozie job -oozie http://localhost:11000/oozie -config /opt/job/timer/job.properties -run
+6. WebUI: http://hadoop-master:11000/oozie  --> Coordinator Jobs tab
+7. /bgdt/oozie-4.2.0/bin/oozie job -oozie http://localhost:11000/oozie -kill [0000132-160616162745939-oozie-hado-C]
+
+
+
+十四. hive problems
+---------------------------------------------------------------------
+1. hive 的metastore建立的目錄與進入hive的所在目錄有關如果從不同目錄進入hive時,會在不同的地方產生metastore目錄
+   會造成如果從不同目錄執行hive指令時會看不到table
+   可以將metastore_db install to other Database(mysql,oracle db)
+2. hive 原始設定中無法執行update,delete等指令,需要經設定後才能啟用
+3. hive 內無設定PK field的用法
+4. hive 在執行select count(*) from XXX,order by XX desc,sort by XXX等語法時,會進行MapReduce的行為,因此會有執行效能上的問題
+5. 如果使用jdbc連接時,需啟動hiveserver2
+   hive --service hiveserver2
+
+
+十五. add a data node
+----------------------------------------------------------------------
+1. install Linux OS
+2. Modify Network setting
+3. stop firewall
+4. create hadoop user
+5. modify visudo
+6. ssh setting
+7. install JDK8
+8. synchronization system time
+9. modify slaves (add ->hadoop-slaveX),every datanode must modify
+10.copy hadoop master of hadoop directory to new datanode(tmp,logs directory must delete)
+11.hadoop-daemon.sh start|stop datanode
+12.yarn-daemon.sh start|stop nodemanager
+
+
+
+Hive update/delete DDL setting
+-------------------------------------
+set hive.auto.convert.join.noconditionaltask.size = 10000000;
+set hive.support.concurrency = true;
+set hive.enforce.bucketing = true;
+set hive.exec.dynamic.partition.mode = nonstrict;
+set hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+set hive.compactor.initiator.on = true;
+set hive.compactor.worker.threads = 1 ;
+
+CREATE TABLE students2 (name VARCHAR(64), age INT, gpa DECIMAL(3, 2))
+CLUSTERED BY (age) INTO 2 BUCKETS 
+STORED AS ORC
+TBLPROPERTIES ("immutable"="false","transactional"="true");
+
+INSERT INTO TABLE students2 VALUES ('fred flintstone', 35, 1.28), ('barney rubble', 32, 2.32);
+
+update
