@@ -1,6 +1,6 @@
-BigData Platform Build Description Document
+ï»¿BigData Platform Build Description Document
 --------------------------------------------
-~/.bashrc³]©w¤º®e¦p¤U:(Hadoop-master)
+~/.bashrcè¨­å®šå…§å®¹å¦‚ä¸‹:(Hadoop-master)
 -------------------
 export JAVA_HOME=/bgdt/java/jdk1.8.0_73
 export HADOOP_HOME=/bgdt/hadoop-2.7.1
@@ -19,9 +19,9 @@ export CLASSPATH=$CLASSPATH:$HADOOP_HOME/share/hadoop/common/*:.
 
 export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$DERBY_HOME/bin:$HIVE_HOME/bin:$HBASE_HOME/bin:$PATH
 
-##¥H¤W³]©w§¹¦¨«á°õ¦æ[CMD]source ~/.bashrc,³]©w¤º®e¥ß§Y¥Í®Ä
+##ä»¥ä¸Šè¨­å®šå®Œæˆå¾ŒåŸ·è¡Œ[CMD]source ~/.bashrc,è¨­å®šå…§å®¹ç«‹å³ç”Ÿæ•ˆ
 -----------------------
-~/.bashrc³]©w¤º®e¦p¤U:(Hadoop-slave1,slave2)
+~/.bashrcè¨­å®šå…§å®¹å¦‚ä¸‹:(Hadoop-slave1,slave2)
 -----------------------------
 export JAVA_HOME=/bgdt/java/jdk1.8.0_73
 export HADOOP_HOME=/bgdt/hadoop-2.7.1
@@ -30,11 +30,11 @@ export CLASSPATH=$CLASSPATH:$HADOOP_HOME/share/hadoop/common/*:.
 
 export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
 
-##¥H¤W³]©w§¹¦¨«á°õ¦æ[CMD]source ~/.bashrc,³]©w¤º®e¥ß§Y¥Í®Ä
+##ä»¥ä¸Šè¨­å®šå®Œæˆå¾ŒåŸ·è¡Œ[CMD]source ~/.bashrc,è¨­å®šå…§å®¹ç«‹å³ç”Ÿæ•ˆ
 
 ------------------------------------------
 
-¤@.°ò¥»Àô¹Ò«Ø¸m
+ä¸€.åŸºæœ¬ç’°å¢ƒå»ºç½®
 -------------------
 1.install Oracle Linux OS
 2.create hadoop user
@@ -63,7 +63,7 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
 5 restart Linux OS
 	[CMD]init 6
 
-¤G. JDK8&ssh Install
+äºŒ. JDK8&ssh Install
 ---------------------------------------------------------------
 0. create install Directory
     6.1 [CMD]mkdir -p /bgdt/install_src
@@ -97,7 +97,7 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
     3.2 [CMD]ssh hadoop-slave1 'date -s 12:54:00;hwclock -w'
     3.3 [CMD]ssh hadoop-slave2 'date -s 12:54:00;hwclock -w'
 
-¤T.hadoop+yarn-cluster(hadoop-2.7.1.tar.gz) environment install
+ä¸‰.hadoop+yarn-cluster(hadoop-2.7.1.tar.gz) environment install
 --------------------------------------------------------------
 1. download hadoop-2.7.1.tar.gz,upload hadoop-master
 2. [CMD]tar -zxvf /bgdt/install_src/hadoop-2.7.1.tar.gz -C /bgdt
@@ -115,23 +115,23 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
 7. install hadoop to every datanode host
     7.1 [CMD]tar -zxvf /bgdt/install_src/hadoop.master.tar.gz -C /bgdt
 8. [CMD]hadoop namenode -format
-9. [CMD]start-dfs.sh   <--±Ò°Ê«á¶i¤JWebUIÆ[¹îDataNode¬O§_¦³±Ò°Ê¤Î¬ÛÃö¸ê°T(http://hadoop-master:50070)
-10.[CMD]start-yarn.sh  <--±Ò°Ê«á¶i¤JWebUIÆ[¹îDataNode¬O§_¦³±Ò°Ê¤Î¬ÛÃö¸ê°T(http://hadoop-master:8088)
-11.[CMD]hadoop dfsadmin -report <--¦¹«ü¥O¥i¥H¬d¬İDataNode®e¶q¸ê°T
+9. [CMD]start-dfs.sh   <--å•Ÿå‹•å¾Œé€²å…¥WebUIè§€å¯ŸDataNodeæ˜¯å¦æœ‰å•Ÿå‹•åŠç›¸é—œè³‡è¨Š(http://hadoop-master:50070)
+10.[CMD]start-yarn.sh  <--å•Ÿå‹•å¾Œé€²å…¥WebUIè§€å¯ŸDataNodeæ˜¯å¦æœ‰å•Ÿå‹•åŠç›¸é—œè³‡è¨Š(http://hadoop-master:8088)
+11.[CMD]hadoop dfsadmin -report <--æ­¤æŒ‡ä»¤å¯ä»¥æŸ¥çœ‹DataNodeå®¹é‡è³‡è¨Š
 -------------------------------------------------------------------------------------------------
 [add a new datanode]
 
 
 
-¥|.Spark environment install
+å››.Spark environment install
 --------------------------------------------------------------
 1. download spark-1.6.0-bin-hadoop2.6.tgz ,upload hadoop-master
 2. tar -zxvf spark-1.6.0-bin-hadoop2.6.tgz -C /bgdt
 3. mv /bgdt/spark-1.6.0-bin-hadoop2.6 /bgdt/spark-1.6.0(Directory Name is too long,so rename name)
 4. Modify ~/.bashrc
-5. spark-shell(¶i¤Jspark-shell,¾Ş§@¶·¨Ï¥Îscala»yªk)
+5. spark-shell(é€²å…¥spark-shell,æ“ä½œé ˆä½¿ç”¨scalaèªæ³•)
 
-¤­.PhaseI Testing: WordCounter(hadoop+yarn-cluster+spark)
+äº”.PhaseI Testing: WordCounter(hadoop+yarn-cluster+spark)
 ----------------------------------------------------------------
 1. test.txt,WordCounter.jar uploading to hadoop-master /opt/job Directory 
 2. [CMD]hadoop fs -put /opt/job/test.txt /tmp
@@ -141,12 +141,12 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
      --master yarn-cluster \
      --class "WordCounter" \
      /opt/job/WordCounter.jar
-   3.2. http://hadoop-master:8088  <--Æ[¹îSparkµ{¦¡°õ¦æ±¡§Î
+   3.2. http://hadoop-master:8088  <--è§€å¯ŸSparkç¨‹å¼åŸ·è¡Œæƒ…å½¢
 4. use spark-shell
    4.1 [CMD]spark-shell
    4.2 write scala program
 
-¤».Derby Install
+å…­.Derby Install
 -------------------------------------------------------------------
 1. download db-derby-10.12.1.1-bin.tar.gz,and upload to hadoop-master
 2. [CMD]tar -zxvf /bgdt/install_src/db-derby-10.12.1.1-bin.tar.gz -C /bgdt
@@ -154,7 +154,7 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
 4. Modify ~/.bashrc
 5. [CMD]mkdir -p /bgdt/derby-10.12.1.1/data
 
-¤C.Hive install
+ä¸ƒ.Hive install
 --------------------------------------------------------------------
 1. download apache-hive-1.2.1-bin.tar.gz,and upload to hadoop-master
 2. [CMD]tar -zxvf /bgdt/install_src/apache-hive-1.2.1-bin.tar.gz -C /bgdt
@@ -176,7 +176,7 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
    NetworkServerControl  <-- derby process
 12.cp $HIVE_HOME/conf/hive-site.xml $SPARK_HOME/conf
 
-¤K.PhaseII Testing:Spark call hive to get table data(hadoop+spark+hive)
+å…«.PhaseII Testing:Spark call hive to get table data(hadoop+spark+hive)
 ----------------------------------------------------------------------
 1. Hive create table and insert data
    1.1 CREATE TABLE students (name VARCHAR(64), age INT, gpa DECIMAL(3, 2)) CLUSTERED BY (age) INTO 2 BUCKETS STORED AS ORC;
@@ -188,7 +188,7 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
    df.show();
 4.testing 2:MSGSearh
 
-¤E. HBase 1.1.4 install
+ä¹. HBase 1.1.4 install
 ----------------------------------------------------------------------
 1. download hbase-1.1.4-bin.tar.gz, upload to hadoop-master
 2. [CMD]tar -zxvf /bgdt/install_src/hbase-1.1.4-bin.tar.gz -C /bgdt
@@ -224,7 +224,7 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
 16.[CMD]$HBASE_HOME/bin/stop-hbase.sh
 17.[CMD]$HBASE_HOME/bin/start-hbase.sh
 
-¤Q.Phoenix install
+å.Phoenix install
 -------------------------------------------------------------------
 1. download phoenix-4.7.0-HBase-1.1-bin.tar.gz,and upload to hadoop-master
 2. [CMD]tar -zxvf /bgdt/install_src/phoenix-4.7.0-HBase-1.1-bin.tar.gz -C /bgdt
@@ -240,11 +240,11 @@ export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin/:$HADOOP_HOME/sbin:$PATH
    7.2 $PHOENIX_HOME/bin/sqlline.py hadoop-slave1:2181
    7.3 $PHOENIX_HOME/bin/sqlline.py hadoop-slave2:2181
 
-¤Q¤@.PhaseIII Test:(hadoop+yarn-cluster+spark+phoenix)
+åä¸€.PhaseIII Test:(hadoop+yarn-cluster+spark+phoenix)
 ---------------------------------------------------------------------
 MSGSearchTest
 
-¤Q¤G.oozie install
+åäºŒ.oozie install
 ---------------------------------------------------------------------
 1.  compiler oozie & oozie build to oozie-4.2.0-distro.tar.gz
 2.  upload oozie-4.2.0-distro.tar.gz to hadoop-master /bgdt/install_src
@@ -277,17 +277,17 @@ MSGSearchTest
 22. put file to HDFS
     - hadoop fs -put /bgdt/oozie-4.2.0/share/lib/* /user/hadoop/share/lib  
 PS:
-1.­×§ï¥ô¦ó³]©wÀÉ©ÎÅÜ§óclassÀÉ®É,³£»İ­n­«±Òoozie 
-2.¦pªGRun yarn-cluster¼Ò¦¡®Éª¬ºA·|¤@ª½²£¥Í ACCEPTED®É,¶·­×§ï¤w¤UÀÉ®×
+1.ä¿®æ”¹ä»»ä½•è¨­å®šæª”æˆ–è®Šæ›´classæª”æ™‚,éƒ½éœ€è¦é‡å•Ÿoozie 
+2.å¦‚æœRun yarn-clusteræ¨¡å¼æ™‚ç‹€æ…‹æœƒä¸€ç›´ç”¢ç”Ÿ ACCEPTEDæ™‚,é ˆä¿®æ”¹å·²ä¸‹æª”æ¡ˆ
 --------------
 $HADOOP_CONF/capacity-scheduler.xml
-­×§ï¥H¤U°Ñ¼Æ:
+ä¿®æ”¹ä»¥ä¸‹åƒæ•¸:
   yarn.scheduler.capacity.maximum-am-resource-percent  (value:0.1 -> 0.5)
 
 
-¤Q¤T.Testing OOZIE
+åä¸‰.Testing OOZIE
 --------------------------
-¤@. create simple workflow job
+ä¸€. create simple workflow job
 1. hadoop fs -mkdir -p /user/hadoop/workflow/spark-wordcounter/lib (create hdfs directory)
 2. create WordCounter.jar & upload to Linux /opt/job/workflow/spark-wordcounter/lib
 3. create workflow.xml & upload to Linux /opt/job/workflow/spark-wordcounter
@@ -297,7 +297,7 @@ $HADOOP_CONF/capacity-scheduler.xml
 7. WebUI: http://hadoop-master:11000/oozie  -->Workflow Jobs tab
 8. /bgdt/oozie-4.2.0/bin/oozie job -oozie http://localhost:11000/oozie -kill [0000132-160616162745939-oozie-hado-C]
 
-¤G. create simple oozie coordinator Job
+äºŒ. create simple oozie coordinator Job
 1. hadoop fs -mkdir -p /user/hadoop/timer/lib (create hdfs directory)
 2. create coordinator.xml & upload to Linux /opt/job/timer
 3. create job.properties & upload to Linux /opt/job/timer
@@ -308,19 +308,19 @@ $HADOOP_CONF/capacity-scheduler.xml
 
 
 
-¤Q¥|. hive problems
+åå››. hive problems
 ---------------------------------------------------------------------
-1. hive ªºmetastore«Ø¥ßªº¥Ø¿ı»P¶i¤Jhiveªº©Ò¦b¥Ø¿ı¦³Ãö¦pªG±q¤£¦P¥Ø¿ı¶i¤Jhive®É,·|¦b¤£¦Pªº¦a¤è²£¥Ímetastore¥Ø¿ı
-   ·|³y¦¨¦pªG±q¤£¦P¥Ø¿ı°õ¦æhive«ü¥O®É·|¬İ¤£¨ìtable
-   ¥i¥H±Nmetastore_db install to other Database(mysql,oracle db)
-2. hive ­ì©l³]©w¤¤µLªk°õ¦æupdate,deleteµ¥«ü¥O,»İ­n¸g³]©w«á¤~¯à±Ò¥Î
-3. hive ¤ºµL³]©wPK fieldªº¥Îªk
-4. hive ¦b°õ¦æselect count(*) from XXX,order by XX desc,sort by XXXµ¥»yªk®É,·|¶i¦æMapReduceªº¦æ¬°,¦]¦¹·|¦³°õ¦æ®Ä¯à¤Wªº°İÃD
-5. ¦pªG¨Ï¥Îjdbc³s±µ®É,»İ±Ò°Êhiveserver2
+1. hive çš„metastoreå»ºç«‹çš„ç›®éŒ„èˆ‡é€²å…¥hiveçš„æ‰€åœ¨ç›®éŒ„æœ‰é—œå¦‚æœå¾ä¸åŒç›®éŒ„é€²å…¥hiveæ™‚,æœƒåœ¨ä¸åŒçš„åœ°æ–¹ç”¢ç”Ÿmetastoreç›®éŒ„
+   æœƒé€ æˆå¦‚æœå¾ä¸åŒç›®éŒ„åŸ·è¡ŒhiveæŒ‡ä»¤æ™‚æœƒçœ‹ä¸åˆ°table
+   å¯ä»¥å°‡metastore_db install to other Database(mysql,oracle db)
+2. hive åŸå§‹è¨­å®šä¸­ç„¡æ³•åŸ·è¡Œupdate,deleteç­‰æŒ‡ä»¤,éœ€è¦ç¶“è¨­å®šå¾Œæ‰èƒ½å•Ÿç”¨
+3. hive å…§ç„¡è¨­å®šPK fieldçš„ç”¨æ³•
+4. hive åœ¨åŸ·è¡Œselect count(*) from XXX,order by XX desc,sort by XXXç­‰èªæ³•æ™‚,æœƒé€²è¡ŒMapReduceçš„è¡Œç‚º,å› æ­¤æœƒæœ‰åŸ·è¡Œæ•ˆèƒ½ä¸Šçš„å•é¡Œ
+5. å¦‚æœä½¿ç”¨jdbcé€£æ¥æ™‚,éœ€å•Ÿå‹•hiveserver2
    hive --service hiveserver2
 
 
-¤Q¤­. add a data node
+åäº”. add a data node
 ----------------------------------------------------------------------
 1. install Linux OS
 2. Modify Network setting
