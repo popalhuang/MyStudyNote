@@ -1,0 +1,174 @@
+﻿查看或執行過去執行過的指令
+-------------------------------
+history    ##列出過去執行過的指令
+history 5  ##列出最近5個使用的指令
+history -c ##立即清空history當前所有歷史命令的記錄
+!!	       ##執行前一次執行指令
+!913       ##執行編號為913的指令
+!rpm       ##執行最後一次以rpm開頭的命令(!? ?代表的是字符串,這個String可以隨便輸，Shell會從最後一條歷史命令向前搜索，最先匹配的一條命令將會得到執行。)
+history | grep "Search"		##查詢過去曾用過指令中有"Search" keyword的相關紀錄
+
+系統關機或重啟指令
+--------------------------------
+[root@tsai root]#shutdown               ##系統在兩分鐘後關機，並傳送訊息給在線上的人 
+[root@tsai root]#shutdown -h now        ##系統立刻關機 
+[root@tsai root]#shutdown -r now        ##系統立刻重新開機 
+[root@tsai root]#shutdown -h 20:30      ##系統在今天的 20:30 分關機 
+[root@tsai root]#shutdown -h +10        ##系統在 10 分鐘後關機
+[root@tsai root]#sync;sync;sync;reboot  ##重新開機指令,配合寫入緩衝資料的sync指令動作
+[root@tsai root]#init 0                 ##關機
+[root@tsai root]#init 6                 ##重新啟動
+
+date指令相關用法
+-----------------------------------
+date +%Y%m%d         		//顯示前天年月日
+date +%Y%m%d --date="+1 day"  	//顯示前一天的日期
+date +%Y%m%d --date="-1 day"  	//顯示後一天的日期
+date +%Y%m%d --date="-1 month"  //顯示上一月的日期
+date +%Y%m%d --date="+1 month"  //顯示下一月的日期
+date +%Y%m%d --date="-1 year"  	//顯示前一年的日期
+date +%Y%m%d --date="+1 year"  	//顯示下一年的日期
+
+
+top相關用法
+-----------------------------------
+top -u hadoop 	<----以使用者
+Shift+O 	<----選擇top的排序欄位
+Shift+W
+Shift+P
+c 		<----顯示詳細COMMAND指令
+z		<----
+k		<---- kill PID
+
+
+
+停止IPv6相關設定
+------------------------------------
+1.sudo vi /etc/sysctl.conf
+2.加入以下設定
+  net.ipv6.conf.all.disable_ipv6 = 1
+3.sudo service network restart
+  or
+  reboot
+4.Login
+
+檔案複製,搬移,刪除指令
+---------------------------------
+mv /tmp1/mvtest1 /tmp2/mvtest2  ##目錄搬移+更名(原本目錄會消失)(/tmp1/mvtest1->/tmp2/mvtest2)
+cp -rp <filename>				##複製檔案,複製時保留檔案的修改時間及存取權限,並包含目錄及目錄下的檔案
+rm -rf <filename>				##刪除檔案或目錄,刪除時不提出警告,並刪除其下檔案及其目錄
+
+檔案權限及擁有者設定指定
+----------------------------------
+chown -R kevin:kevin /tmp   ##變更檔案或目錄擁有者為kevin,群組為kevin(擁有者:群組,-R為遞回的意思,下面所有子目錄套用同樣的設定)
+chmod -R 744 /tmp           ##rwxr--r--,-R為遞回的意思,下面所有子目錄套用同樣的設定
+
+檔案解壓縮指令
+----------------------------------
+tar -zxvf /tmp/abc.tar.gz -C /tmp1/test ##將檔案(abc.tar.gz)解壓縮至 /tmp1/test目錄下
+tar -zxvf /tmp/abc.tar.gz               ##將檔案解壓縮在目前目錄下
+
+查看檔案內容
+----------------------------------
+tail -f ../standalone/log/server.log    ##持續查看Log檔的內容
+cat  <filename>							##顯示檔案內容
+more <filename>							##顯示檔案的內容，如果超過一頁則暫停
+
+
+使用者管理
+----------------------------------
+useradd <username>				##完全參考預設值,建立一個使用者,預設會建立使用者家目錄，且權限為 700
+usermod [-cdegGlsuLU] username	##修改使用者
+userdel -r <username>			##刪除使用者,連同使用者的家目錄也一起刪除
+id
+password
+
+遠端操作相關cmd
+----------------------------------
+ssh <account>@<IP> ##使用某個帳號登入某台主機
+ssh <IP>           ##以目前使用者登入某台主機
+scp <localfile> username@<hostname|IP>:/home/username  ##傳輸本機檔案到遠端電腦目錄
+scp username@<hostname|IP>:/home/username/xxx.jar <Directory>	##遠端主機傳輸檔案至本機目錄
+
+
+
+開機啟動服務相關設定
+-------------------------------
+"chkconfig --add jdg"           註冊服務至Linux OS
+"chkconfig --list jdg"          列出服務在各個RunLevel下的啟動/關閉狀態
+"chkconfig --level 2345 jdg on" 設定jdg服務在哪幾個RunLevel下啟動
+"chkconfig --del jdg"           刪除服務
+
+建立自己的啟動服務:
+1. 建立一個Shell Script且必須要存放至 "/etc/init.d"目錄下
+
+2. 建立一個Shell Script
+   # chkconfig: 2345 99 01
+   # description: JBoss Data Grid Start Program
+   chkconfig:<Runlevel> <start number> <kill unmber>
+   說明:
+	RunLevel 0 - 關機 (init 0)
+	RunLevel 1 - 單用戶模式。此模式通常只含基本運作，而不妨礙維修的基礎服務
+	RunLevel 2 - 不提供 NFS 檔案共享服務的多人模式
+	RunLevel 3 - 多用戶模式，無圖形界面
+	RunLevel 4 - 未使用，用戶定義
+	RunLevel 5 - 多用戶模式，圖形界面
+	RunLevel 6 - 重新啟動(init 6)
+   程式:
+      # chkconfig: 2345 99 01
+      # description: JBoss Data Grid Start Program
+      #!/bin/sh
+
+	export PATH=/opt/jdk1.7.0_71/bin:/opt/apache-maven-3.3.3/bin:$PATH
+	export JAVA_HOME="/opt/jdk1.7.0_71"
+	export MAVEN_HOME="/opt/apache-maven-3.3.3"
+	export CLASSPATH="/opt/jdk1.7.0_71"
+	export JDG_HOME=/opt/jboss/jboss-eap-6.3-server
+
+	RETVAL=0
+	case "$1" in
+        start)
+                cd /opt/jboss/jboss-eap-6.3-server/bin
+                pwd
+                testing=`jps|grep "jboss"`
+                echo $testing
+                if [ "$testing" == "" ]; then
+                        echo "starting JBoss Data Grid Server....."
+                        sh ./startnode1.sh
+                else
+                        echo "JBoss Data Grid Server already started."
+                fi
+
+                echo "OK!!"
+                RETVAL=$?
+                [ $RETVAL -eq 0 ] && touch  /var/lock/subsys/jdg
+        ;;
+        stop)
+                cd /opt/jboss/jboss-eap-6.3-server/bin
+                pwd
+                killnum=`jps|grep "jboss"|cut -d' ' -f1`
+                if [ "$killnum" != "" ];then
+                        kill -9 $killnum
+                        echo "JBoss Data Grid is already stop..."
+                fi
+                echo "OK!!";
+                RETVAL=$?
+                [ $RETVAL -eq 0 ] && touch  /var/lock/subsys/jdg
+        ;;
+        restart)
+        ;;
+
+        *)
+                echo "Usage: basename $0 start|stop|restart"
+                exit 1
+        ;;
+	esac
+	exit $RETVAL  
+	
+2. chkconfig --add jdg
+   將程式註冊至Linux
+   且在"/etc/rc.d/rc2.d","/etc/rc.d/rc3.d","/etc/rc.d/rc4.d","/etc/rc.d/rc5.d"這幾個目錄下會產生
+   S99jdg ->../init.d/jdg  (link)
+   	
+3. chkconfig --level 2345 jdg on 
+  
