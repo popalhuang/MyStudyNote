@@ -1,10 +1,10 @@
-# 相關技術文件連結:
+# Link:
 ### Hadoop Link:
 ### Spark Link:
-spark download: <http://spark.apache.org/downloads.html>  
-spark official document: <http://spark.apache.org/docs/latest/index.html>  
+Spark download: <http://spark.apache.org/downloads.html>  
+Spark official document: <http://spark.apache.org/docs/latest/index.html>  
 Spark Release 2.0.0 changes details: <https://spark.apache.org/releases/spark-release-2-0-0.html>  
-Spark 編程指南繁體版: <https://www.gitbook.com/book/taiwansparkusergroup/spark-programming-guide-zh-tw/details>      
+Spark traditional Chinese document: <https://www.gitbook.com/book/taiwansparkusergroup/spark-programming-guide-zh-tw/details>      
 
 ### Hive Link:
 Hive download: <http://apache.stu.edu.tw/hive/>  
