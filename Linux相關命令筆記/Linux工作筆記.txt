@@ -1,0 +1,40 @@
+﻿Linux & Unix工作筆記(http://www.osslab.org.tw/index.php?title=User:Alang/Linux_%26_UNIX_%E5%B7%A5%E4%BD%9C%E7%AD%86%E8%A8%98)
+
+1.磁碟空間不足怎辦
+-------------------------
+列出前十大的目錄
+#> du -a /var | sort -n -r | head -n 10
+
+$ cd /path/to/some/where
+$ du -hsx * | sort -rh | head -10
+
+UNIX 系統可改用這
+for i in G M K; do du -ah | grep [0-9]$i | sort -nr -k 1; done | head -n 11
+
+用 find 指令
+#> find /path/to/dir/ -printf '%s %p\n'| sort -nr | head -10
+#> find . -printf '%s %p\n'| sort -nr | head -10
+
+#> find /path/to/search/ -type f -printf '%s %p\n'| sort -nr | head -10
+#> find /path/to/search/ -type f -iname "*.mp4" -printf '%s %p\n'| sort -nr | head -10
+
+2.檢測目前系統是哪種虛擬平台
+-------------------------
+#> dmidecode -s system-manufacturer
+#> systemd-detec-virt(沒有此指令)
+#> virt-what
+
+3.history 指令(顯示時間戳記)
+--------------------------
+export HISTTIMEFORMAT="%F %T "
+history | tail -3
+   53  2016–03–02 08:27:38 nano /etc/fstab
+   54  2016–03–02 08:27:38 umount /mnt/NAS
+   55  2016–03–02 08:27:38 mount /mnt/NAS
+
+4.column 指令(將輸出訊息以表格方式顯示)
+--------------------------
+column -ts: /etc/passwd
+mount | column -t
+
+5. 
