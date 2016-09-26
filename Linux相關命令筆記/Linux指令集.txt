@@ -1,9 +1,28 @@
-﻿查看或執行過去執行過的指令
+﻿有用的script
+------------------------------
+ps aux | sort -nrk 3 | head	##將佔用CPU資源的 process 順序列出
+ps aux | sort -nrk 4 | head	##佔用最多記憶體的 process 順序列出
+du -a /home | sort -n -r | head -n 10	##列出占用最多空間的十大目錄
+
+查詢系統或硬體相關資訊
+-------------------------------
+uname		##顯示系統名稱
+uname -r	##顯示kernel版本
+uname -m	##顯示系統架構
+uname -a	##顯示系統全部資訊
+lscpu		##lscpu會透過 /proc/cpuinfo顯示CPU的數量,核心數量,CPU類型等資訊
+lsusb		##查看USB Controllers資訊
+lspci		##查看PCI裝置
+dmidecode -t memory	##透過dmidecode擷取記憶體的資訊
+dmidecode -t system	##透過dmidecode擷取系統的資訊
+dmidecode -t bios	##透過dmidecode擷取BIOS的資訊
+
+查看或執行過去執行過的指令
 -------------------------------
 history    ##列出過去執行過的指令
 history 5  ##列出最近5個使用的指令
 history -c ##立即清空history當前所有歷史命令的記錄
-!!	       ##執行前一次執行指令
+!!	   ##執行前一次執行指令
 !913       ##執行編號為913的指令
 !rpm       ##執行最後一次以rpm開頭的命令(!? ?代表的是字符串,這個String可以隨便輸，Shell會從最後一條歷史命令向前搜索，最先匹配的一條命令將會得到執行。)
 history | grep "Search"		##查詢過去曾用過指令中有"Search" keyword的相關紀錄
@@ -55,8 +74,8 @@ k		<---- kill PID
 檔案複製,搬移,刪除指令
 ---------------------------------
 mv /tmp1/mvtest1 /tmp2/mvtest2  ##目錄搬移+更名(原本目錄會消失)(/tmp1/mvtest1->/tmp2/mvtest2)
-cp -rp <filename>				##複製檔案,複製時保留檔案的修改時間及存取權限,並包含目錄及目錄下的檔案
-rm -rf <filename>				##刪除檔案或目錄,刪除時不提出警告,並刪除其下檔案及其目錄
+cp -rp <filename>		##複製檔案,複製時保留檔案的修改時間及存取權限,並包含目錄及目錄下的檔案
+rm -rf <filename>		##刪除檔案或目錄,刪除時不提出警告,並刪除其下檔案及其目錄
 
 檔案權限及擁有者設定指定
 ----------------------------------
@@ -71,15 +90,16 @@ tar -zxvf /tmp/abc.tar.gz               ##將檔案解壓縮在目前目錄下
 查看檔案內容
 ----------------------------------
 tail -f ../standalone/log/server.log    ##持續查看Log檔的內容
-cat  <filename>							##顯示檔案內容
-more <filename>							##顯示檔案的內容，如果超過一頁則暫停
+cat  <filename>				##顯示檔案內容
+more <filename>				##顯示檔案的內容，如果超過一頁則暫停
 
 
 使用者管理
 ----------------------------------
-useradd <username>				##完全參考預設值,建立一個使用者,預設會建立使用者家目錄，且權限為 700
+useradd <username>		##完全參考預設值,建立一個使用者,預設會建立使用者家目錄，且權限為 700
+
 usermod [-cdegGlsuLU] username	##修改使用者
-userdel -r <username>			##刪除使用者,連同使用者的家目錄也一起刪除
+userdel -r <username>		##刪除使用者,連同使用者的家目錄也一起刪除
 id
 password
 
