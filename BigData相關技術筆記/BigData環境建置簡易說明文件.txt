@@ -337,21 +337,41 @@ $HADOOP_CONF/capacity-scheduler.xml
 
 
 
-Hive update/delete DDL setting
+Hive Transactional
 -------------------------------------
-set hive.auto.convert.join.noconditionaltask.size = 10000000;
-set hive.support.concurrency = true;
-set hive.enforce.bucketing = true;
-set hive.exec.dynamic.partition.mode = nonstrict;
-set hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
-set hive.compactor.initiator.on = true;
-set hive.compactor.worker.threads = 1 ;
+use default;
+hive>set hive.support.concurrency=true;
+hive>set hive.exec.dynamic.partition.mode=nonstrict;
+hive>set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 
-CREATE TABLE students2 (name VARCHAR(64), age INT, gpa DECIMAL(3, 2))
-CLUSTERED BY (age) INTO 2 BUCKETS 
+//Create Table schema on transactional
+CREATE TABLE default.students (id string,name string, age INT, gpa DECIMAL(3, 2))
+CLUSTERED BY (id) INTO 2 BUCKETS
 STORED AS ORC
 TBLPROPERTIES ("immutable"="false","transactional"="true");
 
-INSERT INTO TABLE students2 VALUES ('fred flintstone', 35, 1.28), ('barney rubble', 32, 2.32);
+//Test HQL Syntax
+INSERT INTO TABLE default.students VALUES("1","fred flintstone", 35, 1.28), ("2","barney rubble", 32, 2.32);
+update students SET name="kevin" where id="2";
+delete from students where id="1";
 
-update
+MariaDB Install&Started
+-----------------------
+groupadd mysql
+useradd -g mysql mysql
+service iptables stop
+service iptables status
+
+cd /usr/local
+tar -zxvpf /path-to/mariadb-<VERSION>-OS.tar.gz
+ln -s mariadb-<VERSION>-OS mysql
+cd mysql
+./scripts/mysql_install_db --user=mysql
+
+chown -R root .
+chown -R mysql data
+ 
+./bin/mysqld
+./bin/mysql -p  --socket=/var/lib/mysql/mysql.sock
+password:!QAZxsw2
+SELECT User, Host FROM mysql.user WHERE Host <> 'localhost';

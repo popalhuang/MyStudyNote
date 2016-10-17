@@ -129,6 +129,3 @@ nohup ./startMSGImportSpark.sh &
 Porblem
 -----------------------
 1.使用OOZIE執行SparkSubmit時,須注意HBase/Phoenix與Hive Library的衝突
-
-
-
