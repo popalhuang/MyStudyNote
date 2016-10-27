@@ -335,43 +335,86 @@ $HADOOP_CONF/capacity-scheduler.xml
 11.hadoop-daemon.sh start|stop datanode
 12.yarn-daemon.sh start|stop nodemanager
 
-
-
-Hive Transactional
+MariaDB Install for Linux
 -------------------------------------
+step1:
+	[CMD]service iptables stop
+	[CMD]service iptables status
+step2:
+	[CMD]groupadd mysql
+	[CMD]useradd -g mysql mysql
+step3:
+	[CMD]cd /usr/local
+	[CMD]tar -zxvf /path-to/mariadb-VERSION-OS.tar.gz
+	[CMD]ln -s mariadb-VERSION-OS mysql
+	[CMD]cd mysql
+step4:
+	[CMD]./scripts/mysql_install_db --user=mysql
+	[CMD]chown -R root .
+	[CMD]chown -R mysql data
+	[CMD]./bin/mysqld 
+	[CMD]./bin/mysqladmin -u root password '!QAZxsw2'  --socket=/var/lib/mysql/mysql.sock 
+	[CMD]./bin/mysql -p  --socket=/var/lib/mysql/mysql.sock
+	輸入密碼:!QAZxsw2
+	 
+step5:
+	mariadb>SELECT User, Host FROM mysql.user WHERE Host <> 'localhost'; 
+	mariadb>GRANT ALL PRIVILEGES ON *.* TO 'root'@'172.20.11.203' IDENTIFIED BY '!QAZxsw2' WITH GRANT OPTION;
+	mariadb>GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '!QAZxsw2' WITH GRANT OPTION;
+
+Hive Integration Mariadb for Metastore
+-----------------------------------------
+step1:	modify hive-site.xml
+	javax.jdo.option.ConnectionURL=jdbc:mysql://192.168.11.102:3306/metastore_db
+	javax.jdo.option.ConnectionDriverName=com.mysql.jdbc.Driver
+	javax.jdo.option.ConnectionUserName=root
+	javax.jdo.option.ConnectionPassword=!QAZxsw2
+step2: add mysql-connector-java-5.1.39-bin.jar to $HIVE_HOME/lib
+       
+
+Hive update/delete DDL setting
+-------------------------------------
+set hive.auto.convert.join.noconditionaltask.size = 10000000;
+set hive.support.concurrency = true;
+set hive.enforce.bucketing = true;
+set hive.exec.dynamic.partition.mode = nonstrict;
+set hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+set hive.compactor.initiator.on = true;
+set hive.compactor.worker.threads = 1 ;
+
 use default;
 hive>set hive.support.concurrency=true;
 hive>set hive.exec.dynamic.partition.mode=nonstrict;
 hive>set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
 
-//Create Table schema on transactional
-CREATE TABLE default.students (id string,name string, age INT, gpa DECIMAL(3, 2))
+//Create Database(use transactional)
+CREATE TABLE default.students10 (id string,name string, age INT, gpa DECIMAL(3, 2))
 CLUSTERED BY (id) INTO 2 BUCKETS
 STORED AS ORC
 TBLPROPERTIES ("immutable"="false","transactional"="true");
 
-//Test HQL Syntax
-INSERT INTO TABLE default.students VALUES("1","fred flintstone", 35, 1.28), ("2","barney rubble", 32, 2.32);
-update students SET name="kevin" where id="2";
-delete from students where id="1";
 
-MariaDB Install&Started
------------------------
-groupadd mysql
-useradd -g mysql mysql
-service iptables stop
-service iptables status
+//Syntax Testing
+INSERT INTO TABLE default.students10 VALUES("1","fred flintstone", 35, 1.28), ("2","barney rubble", 32, 2.32);
+update students10 SET name="kevin" where id="2";
+delete from students10 where id="1";
 
-cd /usr/local
-tar -zxvpf /path-to/mariadb-<VERSION>-OS.tar.gz
-ln -s mariadb-<VERSION>-OS mysql
-cd mysql
-./scripts/mysql_install_db --user=mysql
 
-chown -R root .
-chown -R mysql data
- 
-./bin/mysqld
-./bin/mysql -p  --socket=/var/lib/mysql/mysql.sock
-password:!QAZxsw2
-SELECT User, Host FROM mysql.user WHERE Host <> 'localhost';
+Spark History Server
+-------------------------------------
+[CMD]hadoop fs -mkdir -p /tmp/history
+step1: Create spark-defaults.conf file and add below Property
+    spark.eventLog.enabled           true
+    spark.eventLog.dir               hdfs:///tmp/history
+    spark.history.fs.logDirectory    hdfs:///tmp/history
+    spark.yarn.historyServer.address mna1:18080
+    spark.history.ui.port            18080
+step2: start-history-server
+[CMD]$SPARK_HOME/sbin/start-history-server.sh
+step3: oozie spark action use history server
+modify workflow.xml at 
+<spark-opts>
+	--conf spark.yarn.historyServer.address=http://mna1:18080 
+	--conf spark.eventLog.dir=hdfs://mna1:8020/tmp/history 
+ 	--conf spark.eventLog.enabled=true
+</spark-opts>
