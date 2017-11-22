@@ -17,4 +17,5 @@ Taiwan Spark User Group: <https://www.facebook.com/groups/spark.tw/>
 Taiwan Hadoop User Group: <https://www.facebook.com/groups/hadoop.tw/>
 
 ### databricks Link:
-dataframes-datasets example: <https://docs.databricks.com/spark/latest/dataframes-datasets/index.html>  
+DataFrames and Datasets example: <https://docs.databricks.com/spark/latest/dataframes-datasets/index.html>  
+spark-sql reference: <https://docs.databricks.com/spark/latest/spark-sql/index.html>
