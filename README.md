@@ -19,4 +19,13 @@ Taiwan Hadoop User Group: <https://www.facebook.com/groups/hadoop.tw/>
 
 ### databricks Link:
 DataFrames and Datasets example: <https://docs.databricks.com/spark/latest/dataframes-datasets/index.html>  
-spark-sql reference: <https://docs.databricks.com/spark/latest/spark-sql/index.html>  
+spark-sql reference: <https://docs.databricks.com/spark/latest/spark-sql/index.html> 
+
+### Machine Learning
+Machine Learning use Python:<https://www.gitbook.com/book/htygithub/machine-learning-python/details>  
+
+### Deep Learning
+ 
+---
+### .Net Framework相關學習資源
+mrkt的程式學習筆記: <http://kevintsengtw.blogspot.tw/p/aspnet-mvc.html>  
