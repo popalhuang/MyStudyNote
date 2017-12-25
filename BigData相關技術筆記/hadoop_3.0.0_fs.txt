@@ -15,7 +15,7 @@ hadoop fs -cat /user/hadoop/example/test1.txt
 ##觀察文字檔內容
 hadoop fs -text /user/hadoop/example/test1.txt
 
-##觀察文字檔內容(加入參數)
+##觀察文字檔內容(加入參數"-f",file內容會持續Append進來,適合用於觀察Log錯誤訊觀察)
 hadoop fs -tail -f /user/hadoop/example/test1.txt
 
 hadoop fs -ls /user/hadoop/example	##顯示目錄列表
