@@ -1,0 +1,556 @@
+﻿Linux 快速鍵
+------------------------
+Linux Terminal快速鍵
+終端機操作快速鍵
+------------------------------
+上下鍵		##找尋剛執行過的指令
+whi <tab>	##自動補完指令或目錄檔案相關名稱
+<F1>~<F6>	##切換終端機(Desktop會有桌面與終端機切換)
+<F7>		##由終端機切會桌面
+<ctrl+a>	##游標移回開頭位置
+<ctrl+e>	##游標移回最後位置
+<ctrl+u>	##剪下游標前方所有文字並複製到暫存剪貼簿
+<ctrl+k>	##剪下游標後方所有文字並複製到暫存剪貼簿
+<ctrl+y>	##由暫存剪貼簿貼上Ctrl+U與Ctrl+K剪下的文字
+
+<ctrl+r>	##搜尋指令
+<ctrl+l>	##清除螢幕,與clear指令相同
+<ctrl+d>	##登出Terminal，同exit命令
+
+常用別名設定建議(Ubuntu)
+------------------------------
+alias update="sudo apt-get update"			##更新資料庫來源清單
+alias upgrade="sudo apt-get dist-upgrade"	##系統更新
+alias apt-get="sudo apt-get"				##軟體安裝
+alias cls="clear"							##清除畫面
+alias reboot="sudo reboot now"				##重新開機
+alias his="history"							##顯示指令執行歷史紀錄
+alias hisg='history | grep'					##依輸入字串顯示符合的指令執行記錄
+alias ps='ps -ef | grep'					##依輸入的字串查詢執行中的處理程序
+alias df='df -h'							##顯示硬碟各分割區的使用狀況
+
+查看或執行過去執行過的指令
+-------------------------------
+history    				##列出過去執行過的指令
+history 5  				##列出最近5個使用的指令
+history -c 				##立即清空history當前所有歷史命令的記錄
+!!	   	   				##執行前一次執行指令
+!913       				##執行編號為913的指令
+!rpm       				##執行最後一次以rpm開頭的命令(!? ?代表的是字符串,這個String可以隨便輸，Shell會從最後一條歷史命令向前搜索，最先匹配的一條命令將會得到執行。)
+history | grep "Search"	##查詢過去曾用過指令中有"Search" keyword的相關紀錄
+
+
+Linux vi快速鍵
+Linux nano快速鍵
+Linux top指令快速鍵
+
+Linux指令說明
+-----------------------
+man,help,history
+
+Linux關機相關指令
+-----------------------
+關機指令:shutdown,halt,poweroff
+
+command:shutdown
+----------------
+parameter:
+-r：讓系統重新開機（reboot）。
+-h：讓系統停止運作（halt）或關閉電源（power off），至於會選擇哪一種則取決於系統（有時候可以在BIOS中更改）。
+-H：讓系統停止運作。
+-P：讓系統關閉電源。
+-c：取消之前所下達的關機指令。
+-k：模擬關機，只有對使用者發出警告，並禁止新使用者登入，但不關機。
+-----------------
+Example:
+shutdown -h now		##立即關機(init 0)
+shutdown -h +0		##立即關機(init 0)
+shutdown -h 21:30	##於當天晚上21:30關機
+shutdown -h +10 "Development server is going down for maintenance. Please save your work ASAP." 	##發送訊息告知使用者,並於10分鐘後時關機
+shutdown -c			##取消關機
+shutdown -k 18:30	##模擬關機
+shutdown -r/reboot/sudo init 6	##立即重新啟動
+
+
+重新啟動指令:reboot
+
+其他相關指令:init 0/6
+
+Linux檔案與目錄管理
+-------------------
+目錄的相關操作  ： cd, pwd, mkdir, rmdir
+
+command:pwd [-P]
+-----------
+parameter:
+-P  ：顯示出確實的路徑，而非使用連結 (link) 路徑。
+-----------
+Example:
+pwd
+pwd -P
+
+command:mkdir [-mp] 目錄名稱
+-------------
+parameter:
+-m ：設定檔案的權限喔！直接設定，不需要看預設權限 (umask) 的臉色～
+-p ：幫助你直接將所需要的目錄(包含上層目錄)遞迴建立起來！
+-------------
+Example:
+
+
+command:rmdir [-p] 目錄名稱
+------------
+parameter:
+-p ：連同『上層』『空的』目錄也一起刪除
+------------
+Example:
+rmdir test1							##不過要注意的是，這個 rmdir 僅能『刪除空的目錄』喔！
+rmdir -p test1/test2/test3/test4	##利用 -p 這個選項，立刻就可以將 test1/test2/test3/test4 一次刪除
+
+
+檔案與目錄的檢視： ls
+command:ls
+----------
+parameter:
+-a  ：全部的檔案，連同隱藏檔( 開頭為 . 的檔案) 一起列出來(常用)
+-A  ：全部的檔案，連同隱藏檔，但不包括 . 與 .. 這兩個目錄
+-d  ：僅列出目錄本身，而不是列出目錄內的檔案資料(常用)
+-f  ：直接列出結果，而不進行排序 (ls 預設會以檔名排序！)
+-F  ：根據檔案、目錄等資訊，給予附加資料結構，例如：*:代表可執行檔； /:代表目錄； =:代表 socket 檔案； |:代表 FIFO 檔案；
+-h  ：將檔案容量以人類較易讀的方式(例如 GB, KB 等等)列出來；
+-i  ：列出 inode 號碼，inode 的意義下一章將會介紹；
+-l  ：長資料串列出，包含檔案的屬性與權限等等資料；(常用)
+-n  ：列出 UID 與 GID 而非使用者與群組的名稱 (UID與GID會在帳號管理提到！)
+-r  ：將排序結果反向輸出，例如：原本檔名由小到大，反向則為由大到小；
+-R  ：連同子目錄內容一起列出來，等於該目錄下的所有檔案都會顯示出來；
+-S  ：以檔案容量大小排序，而不是用檔名排序；
+-t  ：依時間排序，而不是用檔名。
+--color=never  ：不要依據檔案特性給予顏色顯示；
+--color=always ：顯示顏色
+--color=auto   ：讓系統自行依據設定來判斷是否給予顏色
+--full-time    ：以完整時間模式 (包含年、月、日、時、分) 輸出
+--time={atime,ctime} ：輸出 access 時間或改變權限屬性時間 (ctime) 而非內容變更時間 (modification time
+-----------
+Example 
+ls -la /bgdt
+ls -ll /bgdt
+
+					   
+
+檔案與目錄的複製、刪除與移動： cp, rm, mv, rename
+
+command:cp [-adfilprsu] 來源檔(source) 目標檔(destination)
+----------
+parameter:
+-a  ：相當於 -dr --preserve=all 的意思，至於 dr 請參考下列說明；(常用)
+-d  ：若來源檔為連結檔的屬性(link file)，則複製連結檔屬性而非檔案本身；
+-f  ：為強制(force)的意思，若目標檔案已經存在且無法開啟，則移除後再嘗試一次；
+-i  ：若目標檔(destination)已經存在時，在覆蓋時會先詢問動作的進行(常用)
+-l  ：進行硬式連結(hard link)的連結檔建立，而非複製檔案本身；
+-p  ：連同檔案的屬性(權限、用戶、時間)一起複製過去，而非使用預設屬性(備份常用)；
+-r  ：遞迴持續複製，用於目錄的複製行為；(常用)
+-s  ：複製成為符號連結檔 (symbolic link)，亦即『捷徑』檔案；
+-u  ：destination 比 source 舊才更新 destination，或 destination 不存在的情況下才複製。
+--preserve=all ：除了 -p 的權限相關參數外，還加入 SELinux 的屬性, links, xattr 等也複製了。
+----------
+Example:
+cp /var/log/wtmp .
+cp -a /var/log/wtmp wtmp_2
+cp -r /etc/ /tmp
+
+command:rm [-fir] 檔案或目錄
+----------
+parameter:
+-f  ：就是 force 的意思，忽略不存在的檔案，不會出現警告訊息；
+-i  ：互動模式，在刪除前會詢問使用者是否動作
+-r  ：遞迴刪除啊！最常用在目錄的刪除了！這是非常危險的選項！！！
+----------
+Example:
+rm -rf ~/test1.txt
+rm -rf /tmp/etc
+
+command:mv [-fiu] source destination
+----------
+parameter:
+-f  ：force 強制的意思，如果目標檔案已經存在，不會詢問而直接覆蓋；
+-i  ：若目標檔案 (destination) 已經存在時，就會詢問是否覆蓋！
+-u  ：若目標檔案已經存在，且 source 比較新，才會更新 (update)
+----------
+Example:
+mv mvtest mvtest2
+mv bashrc1 bashrc2 mvtest2	##注意到這邊，如果有多個來源檔案或目錄，則最後一個目標檔一定是『目錄！』
+
+直接檢視檔案內容： cat, tac, nl
+command:cat [-AbEnTv]
+-----------
+選項與參數：
+-A  ：相當於 -vET 的整合選項，可列出一些特殊字符而不是空白而已；
+-b  ：列出行號，僅針對非空白行做行號顯示，空白行不標行號！
+-E  ：將結尾的斷行字元 $ 顯示出來；
+-n  ：列印出行號，連同空白行也會有行號，與 -b 的選項不同；
+-T  ：將 [tab] 按鍵以 ^I 顯示出來；
+-v  ：列出一些看不出來的特殊字符
+------------
+Example:
+
+command:nl [-bnw] 檔案
+----------
+parameter:
+-b  ：指定行號指定的方式，主要有兩種：
+      -b a ：表示不論是否為空行，也同樣列出行號(類似 cat -n)；
+      -b t ：如果有空行，空的那一行不要列出行號(預設值)；
+-n  ：列出行號表示的方法，主要有三種：
+      -n ln ：行號在螢幕的最左方顯示；
+      -n rn ：行號在自己欄位的最右方顯示，且不加 0 ；
+      -n rz ：行號在自己欄位的最右方顯示，且加 0 ；
+-w  ：行號欄位的佔用的字元數
+----------
+Example:
+nl -b a /etc/issue				##行號加上來囉～那麼如果要讓行號前面自動補上 0 呢？可這樣
+nl -b a -n rz /etc/issue		##自動在自己欄位的地方補上 0 了～預設欄位是六位數
+nl -b a -n rz -w 3 /etc/issue	##行號變成僅有 3 位數囉
+
+可翻頁檢視檔案內容： more, less
+command:more
+------------
+Example:
+more /etc/man_db.conf
+
+
+檔案內容資料擷取： head, tail
+command:head [-n number] 檔案
+------------
+parameter:
+-n  ：後面接數字，代表顯示幾行的意思
+------------
+Example:
+head -n 20 /etc/man_db.conf
+
+command:tail [-n number] 檔案
+------------
+parameter:
+-n  ：後面接數字，代表顯示幾行的意思
+-f  ：表示持續偵測後面所接的檔名，要等到按下[ctrl]-c才會結束tail的偵測
+------------
+Example:
+tail -f /var/log/dmesg
+tail -f -n 100 /var/log/dmesg
+tail -n +1400 /var/log/dmesg
+
+非純文字檔： od(查看非文字檔)
+-----------------------------------
+[root@study ~]# od [-t TYPE] 檔案
+選項或參數：
+	-t  ：後面可以接各種『類型 (TYPE)』的輸出，例如：
+    -a       ：利用預設的字元來輸出；
+    -c       ：使用 ASCII 字元來輸出
+    -d[size] ：利用十進位(decimal)來輸出資料，每個整數佔用 size bytes ；
+    -f[size] ：利用浮點數值(floating)來輸出資料，每個數佔用 size bytes ；
+    -o[size] ：利用八進位(octal)來輸出資料，每個整數佔用 size bytes ；
+    -x[size] ：利用十六進位(hexadecimal)來輸出資料，每個整數佔用 size bytes ；
+Example:
+od -t c /usr/bin/passwd
+od -t oCc /etc/issue
+
+修改檔案時間與建置新檔： touch
+command:touch [-acdmt] 檔案
+-------------
+parameter:
+-a  ：僅修訂 access time；
+-c  ：僅修改檔案的時間，若該檔案不存在則不建立新檔案；
+-d  ：後面可以接欲修訂的日期而不用目前的日期，也可以使用 --date="日期或時間"
+-m  ：僅修改 mtime ；
+-t  ：後面可以接欲修訂的時間而不用目前的時間，格式為[YYYYMMDDhhmm]
+-------------
+Example:
+touch testtouch
+touch -d "2 days ago" bashrc
+touch -t 201406150202 bashrc
+
+檔案預設權限設定：umask(權限掩碼)
+
+檔案隱藏屬性： chattr, lsattr
+
+
+
+觀察檔案類型：file
+指令檔名的搜尋：which
+檔案檔名的搜尋：whereis, locate / updatedb, find, grep
+指令內容的搜尋：grep,find
+
+改變檔案屬性與權限： chgrp, chown, chmod
+
+資料處理工具:awk,sed
+檔案比對工具：, diff, cmp, patch
+
+Linux 磁碟與檔案系統管理
+-------------------------
+查詢 Ext 家族 superblock 資訊的指令:
+磁碟與目錄的容量： df, du
+實體連結與符號連結： ln
+觀察磁碟分割狀態：, lsblk, blkid, parted
+磁碟分割 gdisk/fdisk： gdisk, partprobe, fdisk
+磁碟格式化(建置檔案系統)： mkfs.xfs, mkfs.xfs for raid, mkfs.ext4, mkfs
+檔案系統檢驗： xfs_repair, fsck.ext4
+檔案系統掛載與卸載： mount, umount
+磁碟/檔案系統參數修訂： mknod, xfs_admin, uuidgen, tune2fs
+使用實體分割槽建置swap： mkswap, free, swapon, swapoff
+檔案傳輸工具:ftp, scp
+
+SCP
+---
+Usage:
+scp file [[user@]host1:]dirPath
+Example1:
+---------
+scp /home/hadoop/hadoop-3.0.0.tar.gz hadoop@hadoop-slave2:/bgdt
+scp jonny@remote-server.net:/home/jonny/.bashrc .
+
+
+Linux 帳號管理與 ACL 權限設定
+------------------------------
+新增與移除使用者： useradd, passwd, chage, usermod, userdel
+使用者功能：id, finger, chfn, chsh
+新增與移除群組：groupadd, groupmod, groupdel, gpasswd
+使用者身分切換指令:su,sudo,visudo
+一些帳號相關的檢查工具：pwck, pwconv, pwunconv, chpasswd
+查詢使用者： w, who, last, lastlog
+使用者對談： write, mesg, wall
+
+Linux程序管理
+----------------------------
+job control的管理指令：&, [ctrl]-z, jobs, fg, bg
+離線管理指令： nohup
+程序的觀察： ps,top,pstree
+程序的管理指令： signal, kill, killall
+關於程序的執行順序指令： priority, nice, renice
+系統資源的觀察指令： free, uname, uptime, netstat, dmesg, vmstat
+
+Linux例行性工作排程(crontab)
+----------------------------
+Linux 工作排程：at, crontab
+實際運作單一工作排程： at, atq & atrm, batch
+可喚醒停機期間的工作任務:anacron
+
+Linux軟體安裝
+----------------------------
+Debin/Ubuntu:apt-get.dpkg
+RedHat/CentOS:rpm
+
+Linux 磁碟配額(Quota)管理指令
+----------------------------------------
+基本的quota指令： quota, quotacheck, edquota, quotaon, quotaoff
+
+Linux LVM,邏輯捲軸管理員(Logical Volume Manager)管理指令
+------------------------
+PV 階段 : pvcreate,pvscan,pvdisplay,pvremove 
+VG 階段 : vgcreate,vgscan,vgdisplay,vgextend,vgreduce,vgchange,vgremove
+LV 階段 : lvcreate,lvscan,lvdisplay,lvextend,lvreduce,lvremove,lvresize
+放大LV容量： xfs_growfs
+
+
+Linux 系統服務(daemons)管理
+----------------------------------------
+RedHat/Oracle :chkconfig
+CentOS: systemd 
+Ubuntu:
+
+Linux 系統設定指令
+------------------------------------
+伺服器硬體資料的收集:dmidecode,gdisk,dmesg,vmstat,lspci,lsusb,iostat
+監測目前常見的ATA與SCSI界面的磁碟:smartctl
+Linux相關版本資訊收集:uname,lsb_release
+日期與時間的調整:date,hwclock
+調整系統核心參數:sysctl
+語系設定:locale(redhat),localectl(centos)
+防火牆設定:iptables
+修改主機名稱:hostname
+
+Linux 核心模組管理指令
+---------------------------
+核心模組與相依性： depmod
+核心模組的觀察： lsmod, modinfo
+核心模組的載入與移除：insmod, modprobe, rmmod
+
+
+Linux檔案與檔案系統的壓縮,打包與備份
+------------------------------------
+系統常見的壓縮指令
+	gzip, zcat/zmore/zless/zgrep
+	bzip2, bzcat/bzmore/bzless/bzgrep
+	xz, xzcat/xzmore/xzless/xzgrep
+	
+打包指令:tar
+command:tar
+-----------------
+選項與參數：
+-c  ：建立打包檔案，可搭配 -v 來察看過程中被打包的檔名(filename)
+-t  ：察看打包檔案的內容含有哪些檔名，重點在察看『檔名』就是了；
+-x  ：解打包或解壓縮的功能，可以搭配 -C (大寫) 在特定目錄解開
+      特別留意的是， -c, -t, -x 不可同時出現在一串指令列中。
+-z  ：透過 gzip  的支援進行壓縮/解壓縮：此時檔名最好為 *.tar.gz
+-j  ：透過 bzip2 的支援進行壓縮/解壓縮：此時檔名最好為 *.tar.bz2
+-J  ：透過 xz    的支援進行壓縮/解壓縮：此時檔名最好為 *.tar.xz
+      特別留意， -z, -j, -J 不可以同時出現在一串指令列中
+-v  ：在壓縮/解壓縮的過程中，將正在處理的檔名顯示出來！
+-f filename：-f 後面要立刻接要被處理的檔名！建議 -f 單獨寫一個選項囉！(比較不會忘記)
+-C 目錄   ：這個選項用在解壓縮，若要在特定目錄解壓縮，可以使用這個選項。
+
+其他後續練習會使用到的選項介紹：
+-p(小寫) ：保留備份資料的原本權限與屬性，常用於備份(-c)重要的設定檔
+-P(大寫) ：保留絕對路徑，亦即允許備份資料中含有根目錄存在之意；
+--exclude=FILE：在壓縮的過程中，不要將 FILE 打
+------------------
+Example:
+tar -zxvf /install_src/hadoop.tar.gz -C /bgdt	##解壓縮
+tar -zcvf ~/hadoop.tar.gz /bgdt/hadoop		##壓縮
+cd /bgdt
+tar -zcvf ~/hadoop.tar.gz hadoop-3.0.0		##壓縮
+
+XFS 檔案系統備份 xfsdump
+XFS 檔案系統還原 xfsrestore
+製作一般資料光碟映像檔:mkisofs
+製作/修改可開機光碟映像擋:isoinfo
+光碟燒錄工具:cdrecord
+
+其他常見的壓縮與備份工具:dd,cpio
+---------------------------------
+dd
+---------
+if=FILE		：指定輸入檔案名稱（input file）為 FILE。
+of=FILE	 	：指定輸出檔案名稱（output file）為 FILE。
+ibs=BYTES	：指定輸入區塊大小（input block size），一次讀取 BYTES 位元組的資料，預設為 512 位元組。
+obs=BYTES	：指定輸出區塊大小（output block size），一次寫入 BYTES 位元組的資料，預設為 512 位元組。
+bs=BYTES	：指定 block size，一次讀取與寫入 BYTES 位元組的資料，此選項會覆蓋 ibs 與 obs 的設定。
+cbs=BYTES	：一次轉換 BYTES 位元組的資料。
+count=N		：只處理 N 個輸入區塊，每個區塊的大小為 ibs。
+seek=N		：在輸出時跳過輸出檔案的前 N 個區塊，每個區塊的大小為 obs。
+skip=N		：在輸入時跳過輸入檔案的前 N 個區塊，每個區塊的大小為 ibs。
+conv=CONVS：指定資料的轉換選項，如果一次要指定多種轉換，則以逗點分隔。
+
+以下是各種可用的轉換：
+----------
+ascii	：	EBCDIC 轉 ASCII。
+ebcdic	：	ASCII 轉 EBCDIC。
+ibm    	：	ASCII 轉 alternate EBCDIC。
+block   ：	將每一個區塊的資料結尾的換行字元替換為空白，並以空白將整個區塊補足 cbs 位元組。。
+unblock ：	將每個區塊結尾的空白字元替換為換行字元。
+lcase	： 	將大寫字母轉換成小寫。
+ucase	：	將小寫字母轉換成大寫。
+swab	：	將每一對輸入的位元組交換。
+sync	：	將每一個輸入的區塊以 NUL 補足至 ibs 位元組的大小，如果是在 block 或是 unblock 的轉換中，則以空白字元來補足。
+nocreat	：	不要建立輸出檔案。
+notrunc	：	不要將輸出檔案截短。
+noerror	：	發生錯誤時還是繼續執行。
+fdatasync：	讓資料同步實體寫入硬碟，不要留在緩衝區中。
+Example:
+dd if=/dev/urandom of=test1.txt bs=1K count=1		##建立1K檔案
+sudo dd if=/dev/sda of=/dev/sdb						##備份整顆硬碟(在整個過程中如果出現讀取錯誤的話，dd 就會停止執行)
+sudo dd if=/dev/sda of=/dev/sdb conv=noerror,sync	##加上 conv=noerror 參數，這個選項通常在備份資料時會使用到,
+													## 加上 sync 可以讓 dd 以 synchronized I/O 的方式備份資料：
+sudo dd if=/dev/hda of=~/hdadisk.img				##建立硬碟映像檔
+
+Linux SELinux管理
+------------------------------
+SELinux 三種模式的啟動、關閉與觀察指令： getenforce, sestatus, setenforce
+SELinux 政策內的規則管理指令： getsebool, seinfo, sesearch, setsebool
+SELinux 安全本文的修改指令： chcon, restorecon, semanage
+
+Linux 常用網路指令
+----------------------------
+手動/自動設定與啟動/關閉 IP 參數：ifconfig, ifup, ifdown
+路由修改： route
+網路參數綜合指令： ip
+無線網路： iwlist, iwconfig
+手動使用 DHCP 自動取得 IP 參數：dhclient
+兩部主機兩點溝通： ping
+修改主機名稱:hostname
+兩主機間各節點分析： traceroute
+
+
+察看本機的網路連線與後門： netstat,ss
+--------------------------------------
+ss command，不加任何參數，就會輸出所有已經建立的 TCP 連線：
+-----------------------------------
+-n：以數值的方式顯示連接埠，不要解析為服務名稱。
+-r：將 IP 位址解析為主機名稱。
+-l：列出傾聽狀態（listening）的 sockets。
+-a：顯示所有的 sockets，包含傾聽狀態（listening）與非傾聽狀態（non-listening）。
+-t：只列出 TCP 的 sockets。
+-u：只列出 UDP 的 sockets。
+-x：只列出 Unix 的 sockets。
+-4：只列出 IPv4 的 sockets。。
+-6：只列出 IPv6 的 sockets。。
+-p：顯示使用 sockets 的程式資訊。
+-e：顯示 sockets 細部資訊。
+-i：顯示 TCP sockets 內部資訊。
+-o：顯示 sockets 的計時器（timer）資訊。
+-s：輸出 sockets 的使用統計表。
+-------------
+Example:
+ss -t4pl | grep "java"
+
+netstat 
+------------------------------------------
+選項與參數：
+與路由 (route) 有關的參數說明：
+-r  ：列出路由表(route table)，功能如同 route 這個指令；
+-n  ：不使用主機名稱與服務名稱，使用 IP 與 port number ，如同 route -n與網路介面有關的參數：
+-a  ：列出所有的連線狀態，包括 tcp/udp/unix socket 等；
+-t  ：僅列出 TCP 封包的連線；
+-u  ：僅列出 UDP 封包的連線；
+-l  ：僅列出有在 Listen (監聽) 的服務之網路狀態；
+-p  ：列出 PID 與 Program 的檔名；
+-c  ：可以設定幾秒鐘後自動更新一次，例如 -c 5 每五秒更新一次網路狀態的顯示；
+Example:
+netstat -rn		##列出目前的路由表狀態，且以 IP 及 port number 顯示：
+netstat -an		##列出目前的所有網路連線狀態，使用 IP 與 port number
+netstat -tnl	##
+
+偵測主機名稱與 IP 對應： host, nslookup
+終端機與 BBS 連線： telnet
+FTP連線軟體： ftp, lftp (自動化腳本)
+圖形介面的即時通訊軟體： pidgin (gaim 的延伸)
+文字瀏覽器： links
+文字介面下載器： wget
+文字介面封包擷取器： tcpdump
+圖形介面封包擷取器： wireshark
+任意啟動 TCP/UDP 封包的埠口連線：nc, netcat, ss
+
+mariadb相關指令
+---------------------------
+
+
+OracleDB相關指令
+----------------------------
+sqlplus
+
+Hadoop相關指令
+---------------------------
+hadoop,yarn,hive,oozie
+
+vagrant相關指令
+---------------------------
+vagrant box add ubuntu/precise64
+vagrant box list
+vagrant box remove precise64
+vagrant init
+vagrant up
+vagrant halt
+vagrant reload
+vagrant destory
+
+hexo相關指令
+---------------------------
+npm install hexo-cli -g
+hexo init
+hexo s
+hexo clean
+hexo g
+hexo d
+
+git相關指令
+----------------------------
+git add .
+git commit -m "test"
+git update
