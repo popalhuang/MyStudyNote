@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<allocations>
+<userMaxAppsDefault>30</userMaxAppsDefault>
+<queue name="root">
+	<minResources>10240mb,10vcores</minResources>
+	<maxResources>24576mb,24vcores</maxResources>
+	<maxRunningApps>100</maxRunningApps>
+	<weight>1.0</weight>
+	<schedulingMode>fair</schedulingMode>
+	<aclSubmitApps> </aclSubmitApps>
+	<aclAdministerApps> </aclAdministerApps>
+
+		<queue name="default">
+			<minResources>1024mb,1vcores</minResources>
+			<maxResources>24576mb,24vcores</maxResources>
+			<maxRunningApps>100</maxRunningApps>
+			<schedulingMode>fair</schedulingMode>
+			<weight>1.0</weight>
+			<aclSubmitApps>*</aclSubmitApps>
+		</queue>
+
+		<queue name="msgsearch">
+			<minResources>100mb,1vcores</minResources>
+			<maxResources>256mb,1vcores</maxResources>
+			<maxRunningApps>100</maxRunningApps>
+			<schedulingMode>fair</schedulingMode>
+			<weight>2.0</weight>
+			<aclSubmitApps>hadoop</aclSubmitApps>
+		</queue>
+</queue>
+</allocations>
