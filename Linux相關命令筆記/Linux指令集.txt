@@ -82,7 +82,7 @@ rm -rf <filename>		##刪除檔案或目錄,刪除時不提出警告,並刪除其
 chown -R kevin:kevin /tmp   ##變更檔案或目錄擁有者為kevin,群組為kevin(擁有者:群組,-R為遞回的意思,下面所有子目錄套用同樣的設定)
 chmod -R 744 /tmp           ##rwxr--r--,-R為遞回的意思,下面所有子目錄套用同樣的設定
 
-檔案解壓縮指令
+檔案解壓縮/壓縮指令
 ----------------------------------
 tar -zxvf /tmp/abc.tar.gz -C /tmp1/test ##將檔案(abc.tar.gz)解壓縮至 /tmp1/test目錄下
 tar -zxvf /tmp/abc.tar.gz               ##將檔案解壓縮在目前目錄下
@@ -108,10 +108,29 @@ password
 ----------------------------------
 ssh <account>@<IP> ##使用某個帳號登入某台主機
 ssh <IP>           ##以目前使用者登入某台主機
+
+檔案傳輸指令
+----------------------------------
 scp <localfile> username@<hostname|IP>:/home/username  ##傳輸本機檔案到遠端電腦目錄
 scp username@<hostname|IP>:/home/username/xxx.jar <Directory>	##遠端主機傳輸檔案至本機目錄
 
 
+ss command，不加任何參數，就會輸出所有已經建立的 TCP 連線：
+-----------------------------------
+-n：以數值的方式顯示連接埠，不要解析為服務名稱。
+-r：將 IP 位址解析為主機名稱。
+-l：列出傾聽狀態（listening）的 sockets。
+-a：顯示所有的 sockets，包含傾聽狀態（listening）與非傾聽狀態（non-listening）。
+-t：只列出 TCP 的 sockets。
+-u：只列出 UDP 的 sockets。
+-x：只列出 Unix 的 sockets。
+-4：只列出 IPv4 的 sockets。。
+-6：只列出 IPv6 的 sockets。。
+-p：顯示使用 sockets 的程式資訊。
+-e：顯示 sockets 細部資訊。
+-i：顯示 TCP sockets 內部資訊。
+-o：顯示 sockets 的計時器（timer）資訊。
+-s：輸出 sockets 的使用統計表。
 
 開機啟動服務相關設定
 -------------------------------
