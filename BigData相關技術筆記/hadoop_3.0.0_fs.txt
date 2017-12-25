@@ -1,0 +1,105 @@
+﻿Hadoop 3.0.0 HDFS FS Shell
+-----------
+##建立目錄(連同上層目錄一併建立)
+hadoop fs -mkdir -p /user/hadoop/example
+
+##直接透過STD IN建立 HDFS檔案
+hadoop fs -put -f - /user/hadoop/example/test1.txt
+
+##直接透過STD IN Append 內容至HDFS檔案中
+hadoop fs -appendToFile - /user/hadoop/example/test1.txt
+
+##觀察檔案內容
+hadoop fs -cat /user/hadoop/example/test1.txt
+
+##觀察文字檔內容
+hadoop fs -text /user/hadoop/example/test1.txt
+
+##觀察文字檔內容(加入參數)
+hadoop fs -tail -f /user/hadoop/example/test1.txt
+
+hadoop fs -ls /user/hadoop/example	##顯示目錄列表
+hadoop fs -ls -R /user				##顯示目錄列表,連同子目錄
+hadoop fs -ls -R -h /user			##
+hadoop fs -ls -R -t /user			##
+hadoop fs -ls -R -S /user			##
+hadoop fs -ls -R -r /user			##
+hadoop fs -ls -R -e /user			##
+
+##以下先透過dd指令建立檔案,後透過put/get操作檔案上傳與下載動作
+dd if=/dev/urandom of=test2.txt bs=1K count=1
+hadoop fs -put  ~/test2.txt /user/hadoop/example
+hadoop fs -get  /user/hadoop/example/test2.txt ~/get_hdfs_test2.txt
+hadoop fs -getmerge -nl /user/hadoop/example/* ~/merge_file.txt		(getmerge中的nl參數,是指newline的意思)
+
+##以下先透過dd指令建立檔案,copyFromLocal/copyToLocal/cp操作複製檔案上傳與下載動作
+dd if=/dev/urandom of=test3.txt bs=1K count=1
+hadoop fs -copyFromLocal ~/test3.txt /user/hadoop/example
+hadoop fs -copyToLocal  /user/hadoop/example/test3.txt ~/cp_hdfs_tolocal_test3.txt
+hadoop fs -cp  /user/hadoop/example/test3.txt /user/vagrant/test3.txt
+
+##以下先透過dd指令建立檔案,moveFromLocal/mv操作搬移檔案上傳與下載動作
+dd if=/dev/urandom of=test4.txt bs=1K count=1
+hadoop fs -moveFromLocal ~/test4.txt /user/hadoop/example
+##hadoop fs -moveToLocal /user/hadoop/example/test4.txt ~/mv_hdfs_tolocal_test4.txt(Option '-moveToLocal' is not implemented yet.)
+hadoop fs -mv /user/hadoop/example/test4.txt /user/vagrant/test4.txt
+
+##利用truncate/touchz建立空白檔案
+hadoop fs -touchz /user/hadoop/example/test5.txt
+hadoop fs -truncate -w 0 /user/hadoop/example/test1.txt
+
+
+##變更HDFS檔案目錄權限,但必須要
+hadoop fs -chmod 777 /user/hadoop/example/test1.txt
+hadoop fs -chown -R vagrant:vagrant /user/hadoop/example/test1.txt
+hadoop fs -chgrp test /user/hadoop/example/test1.txt
+
+hadoop fs -df -h /user/hadoop
+hadoop fs -du -s -h -v /user
+
+hadoop fs -count hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -q hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -q -h hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -q -h -v hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -u hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -u -h hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -u -h -v hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -e hdfs://hadoop-master:8020/user/hadoop/example/*
+hadoop fs -count -e -h -v hdfs://hadoop-master:8020/user/hadoop/example/*
+
+hadoop fs -getfacl /user/*
+hadoop fs -getfacl -R /user/*
+hadoop fs -setfacl -m user:hadoop:rw- /user/hadoop/example/test1.txt
+hadoop fs -setfacl -x user:hadoop /user/hadoop/example/test1.txt
+hadoop fs -setfacl -b /user/hadoop/example/test1.txt
+hadoop fs -setfacl -k /user/hadoop/example/test1.txt
+hadoop fs -setfacl --set user::r--,group::r--,other::r-- /user/hadoop/example(chmod 444)
+hadoop fs -setfacl --set user::rw-,user:hadoop:rw-,group::r--,other::r-- /user/hadoop/example/test1.txt
+hadoop fs -setfacl -R -m user:hadoop:r-x /user/hadoop/example/*
+hadoop fs -setfacl -m default:user:hadoop:r-x /user/hadoop/example
+
+hadoop fs -getfattr -d /user/hadoop/example/test1.txt
+hadoop fs -getfattr -R -n user.hadoop /user/hadoop/example
+hadoop fs -setfattr -R -n user.hadoop /user/hadoop/example
+
+hadoop fs -setrep -w 2 /user/hadoop/example/test1.txt
+hadoop fs -setrep -w 1 example
+
+hadoop fs -stat /user/*
+hadoop fs -stat "type:%F perm:%a %u:%g size:%b mtime:%y atime:%x name:%n" /user/*
+
+hadoop fs -rm  /user/hadoop/example/*
+hadoop fs -rm -r /user/vagrant
+hadoop fs -rm -skipTrash /user/hadoop/example/*
+hadoop fs -rmdir /user/hadoop/example/data(must empty directory)
+hadoop fs -expunge
+
+hadoop fs -test -e /user/hadoop ##echo $? -->0
+hadoop fs -test -f /user/hadoop	##echo $? -->1
+hadoop fs -test -d /user/hadoop ##echo $? -->0
+hadoop fs -test -z /user/hadoop/example/test1.txt ##echo $? -->0|1
+
+hadoop fs -find '/user/hadoop/example/test*'
+
+hadoop fs -help du
+hadoop fs -usage df
