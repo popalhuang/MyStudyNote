@@ -1,4 +1,5 @@
-﻿有用的script
+﻿Test!!!
+有用的script
 ------------------------------
 ps aux | sort -nrk 3 | head	##將佔用CPU資源的 process 順序列出
 ps aux | sort -nrk 4 | head	##佔用最多記憶體的 process 順序列出

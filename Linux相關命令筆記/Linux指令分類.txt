@@ -517,6 +517,15 @@ FTP連線軟體： ftp, lftp (自動化腳本)
 圖形介面封包擷取器： wireshark
 任意啟動 TCP/UDP 封包的埠口連線：nc, netcat, ss
 
+service command
+---------
+Usage: service < option > | --status-all | [ service_name [ command | --full-restart ] ]
+Example:
+service --status-all
+service iptables status
+
+
+
 mariadb相關指令
 ---------------------------
 
