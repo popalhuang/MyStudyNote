@@ -2,10 +2,10 @@
 
 <table>
    <tr>
-      <td>Service</td>
-	  <td>Parameter</td>
-      <td align='center'>Hadoop 2.7.2 Port</td>      
-	  <td align='center'>Hadoop 3.0.0 Port</td>
+	<td align='center'>Service</td>
+	<td align='center'>Parameter</td>
+	<td align='center'>Hadoop 2.7.2 Port</td>      
+	<td align='center'>Hadoop 3.0.0 Port</td>
    </tr>
 	<tr><td rowspan='3'>NameNode</td><td>fs.defaultFS</td><td align='right'>8020</td><td align='right'>8020</td></tr>	
 	<tr><td>dfs.namenode.http-address</td><td align='right'>50070</td><td align='right'>9870</td></tr>
