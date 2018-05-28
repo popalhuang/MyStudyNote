@@ -4,10 +4,10 @@
    <tr>
       <td>Service</td>
 	  <td>Parameter</td>
-      <td>Hadoop 2.7.2 Port</td>      
-	  <td>Hadoop 3.0.0 Port</td>
+      <td align='center'>Hadoop 2.7.2 Port</td>      
+	  <td align='center'>Hadoop 3.0.0 Port</td>
    </tr>
-	<tr><td rowspan='3'>NameNode</td><td>fs.defaultFS</td><td>8020</td><td>8020</td></tr>	
+	<tr><td rowspan='3'>NameNode</td><td>fs.defaultFS</td><td align='right'>8020</td><td align='right'>8020</td></tr>	
 	<tr><td>dfs.namenode.http-address</td><td>50070</td><td>9870</td></tr>
 	<tr><td>dfs.namenode.https-address</td><td>50470</td><td>9871</td></tr>
 	<tr><td rowspan='2'>Secondary NameNode</td><td>dfs.secondary.http.address</td><td>50090</td><td>0000</td></tr>	
