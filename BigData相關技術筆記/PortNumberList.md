@@ -7,21 +7,18 @@
       <td>Parameter</td>
    </tr>
    <tr>
-      <td>NameNode</td>
+      <td rowspan="3">NameNode</td>
       <td>8020</td>
       <td>fs.defaultFS</td>
    </tr>
    <tr>
-      <td></td>
+      
       <td>50070</td>
       <td>dfs.http.address</td>
    </tr>
-   <tr>
-      <td></td>
+   <tr>      
       <td>50470</td>
       <td>dfs.https.address</td>
-   </tr>
-   <tr>
-      <td></td>
-   </tr>
+   </tr>  
 </table>
+
