@@ -1,6 +1,6 @@
 ﻿### Hadoop 2.7.2/3.0.0 環境用到的Port Number List:
 
-<table border="2">
+<table>
    <tr>
       <td>Service</td>
 	  <td>Parameter</td>
