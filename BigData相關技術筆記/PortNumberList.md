@@ -12,11 +12,12 @@
       <td>fs.defaultFS</td>
    </tr>
    <tr>
-      
+      <td></td>
       <td>50070</td>
       <td>dfs.http.address</td>
    </tr>
    <tr>      
+	  <td></td>
       <td>50470</td>
       <td>dfs.https.address</td>
    </tr>  
