@@ -33,6 +33,6 @@
 	<tr><td></td><td align='right'>11443</td><td align='right'>0000</td></tr>
 	<tr><td>HiveServer2</td><td>hive.server2.thrift.port</td><td align='right'>10000</td><td align='right'>0000</td></tr>
 	<tr><td>Hive Metastore</td><td></td><td align='right'>9083</td><td align='right'>0000</td></tr>
-	<tr><td>Spark Job History</td><td></td><td align='right'>18088</td><td align='right'>0000</td></tr>
+	<tr><td>Spark Job History</td><td>spark.history.ui.port</td><td align='right'>18088</td><td align='right'>0000</td></tr>
 </table>
 
